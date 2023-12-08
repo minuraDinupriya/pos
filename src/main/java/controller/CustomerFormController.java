@@ -1,5 +1,7 @@
 package controller;
 
+import bo.custom.CustomerBo;
+import bo.custom.impl.CustomerBoImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,15 +13,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import dto.CustomerDto;
 import dto.tm.CustomerTm;
-import dao.CustomerDao;
-import dao.impl.CustomerDaoImpl;
+import dao.custom.CustomerDao;
+import dao.custom.impl.CustomerDaoImpl;
 
 import java.io.IOException;
 import java.sql.*;
 import java.util.List;
 
 
-public class CustomerFormController {//
+public class CustomerFormController {
 
     @FXML
     private TableColumn colAddress;
@@ -51,7 +53,7 @@ public class CustomerFormController {//
     @FXML
     private TextField txtSalary;
 
-    private CustomerDao customerDao = new CustomerDaoImpl();
+    private CustomerBo<CustomerDto> customerBo = new CustomerBoImpl();
 
     public void initialize(){
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -80,7 +82,7 @@ public class CustomerFormController {//
         ObservableList<CustomerTm> tmList = FXCollections.observableArrayList();
 
         try {
-            List<CustomerDto> dtoList = customerDao.allCustomers();
+            List<CustomerDto> dtoList = customerBo.allCustomers();
 
             for (CustomerDto dto:dtoList) {
                 Button btn = new Button("Delete");
@@ -94,7 +96,13 @@ public class CustomerFormController {//
                 );
 
                 btn.setOnAction(actionEvent -> {
-                    deleteCustomer(c.getId());
+                    try {
+                        deleteCustomer(c.getId());
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
                 });
 
                 tmList.add(c);
@@ -108,19 +116,15 @@ public class CustomerFormController {//
         }
     }
 
-    private void deleteCustomer(String id) {
-        try {
-            boolean isDeleted = customerDao.deleteCustomer(id);
-            if (isDeleted){
-                new Alert(Alert.AlertType.INFORMATION,"Customer Deleted!").show();
-                loadCustomerTable();
-            }else{
-                new Alert(Alert.AlertType.ERROR,"Something went wrong!").show();
-            }
-
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+    private void deleteCustomer(String id) throws SQLException, ClassNotFoundException {
+        boolean isDeleted = customerBo.deleteCustomer(id);
+        if (isDeleted){
+            new Alert(Alert.AlertType.INFORMATION,"Customer Deleted!").show();
+            loadCustomerTable();
+        }else{
+            new Alert(Alert.AlertType.ERROR,"Something went wrong!").show();
         }
+
     }
 
     @FXML
@@ -142,7 +146,7 @@ public class CustomerFormController {//
     @FXML
     void saveButtonOnAction(ActionEvent event) {
         try {
-            boolean isSaved = customerDao.saveCustomer(new CustomerDto(txtId.getText(),
+            boolean isSaved = customerBo.saveCustomer(new CustomerDto(txtId.getText(),
                     txtName.getText(),
                     txtAddress.getText(),
                     Double.parseDouble(txtSalary.getText())
@@ -163,7 +167,7 @@ public class CustomerFormController {//
     @FXML
     void updateButtonOnAction(ActionEvent event) {
         try {
-            boolean isUpdated = customerDao.updateCustomer(new CustomerDto(txtId.getText(),
+            boolean isUpdated = customerBo.updateCustomer(new CustomerDto(txtId.getText(),
                     txtName.getText(),
                     txtAddress.getText(),
                     Double.parseDouble(txtSalary.getText())
