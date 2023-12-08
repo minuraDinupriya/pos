@@ -11,8 +11,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import dto.CustomerDto;
 import dto.tm.CustomerTm;
-import dao.CustomerModel;
-import dao.impl.CustomerModelImpl;
+import dao.CustomerDao;
+import dao.impl.CustomerDaoImpl;
 
 import java.io.IOException;
 import java.sql.*;
@@ -51,7 +51,7 @@ public class CustomerFormController {//
     @FXML
     private TextField txtSalary;
 
-    private CustomerModel customerModel = new CustomerModelImpl();
+    private CustomerDao customerDao = new CustomerDaoImpl();
 
     public void initialize(){
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -80,7 +80,7 @@ public class CustomerFormController {//
         ObservableList<CustomerTm> tmList = FXCollections.observableArrayList();
 
         try {
-            List<CustomerDto> dtoList = customerModel.allCustomers();
+            List<CustomerDto> dtoList = customerDao.allCustomers();
 
             for (CustomerDto dto:dtoList) {
                 Button btn = new Button("Delete");
@@ -110,7 +110,7 @@ public class CustomerFormController {//
 
     private void deleteCustomer(String id) {
         try {
-            boolean isDeleted = customerModel.deleteCustomer(id);
+            boolean isDeleted = customerDao.deleteCustomer(id);
             if (isDeleted){
                 new Alert(Alert.AlertType.INFORMATION,"Customer Deleted!").show();
                 loadCustomerTable();
@@ -142,7 +142,7 @@ public class CustomerFormController {//
     @FXML
     void saveButtonOnAction(ActionEvent event) {
         try {
-            boolean isSaved = customerModel.saveCustomer(new CustomerDto(txtId.getText(),
+            boolean isSaved = customerDao.saveCustomer(new CustomerDto(txtId.getText(),
                     txtName.getText(),
                     txtAddress.getText(),
                     Double.parseDouble(txtSalary.getText())
@@ -163,7 +163,7 @@ public class CustomerFormController {//
     @FXML
     void updateButtonOnAction(ActionEvent event) {
         try {
-            boolean isUpdated = customerModel.updateCustomer(new CustomerDto(txtId.getText(),
+            boolean isUpdated = customerDao.updateCustomer(new CustomerDto(txtId.getText(),
                     txtName.getText(),
                     txtAddress.getText(),
                     Double.parseDouble(txtSalary.getText())

@@ -22,8 +22,8 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import dto.tm.ItemTm;
-import dao.ItemModel;
-import dao.impl.ItemModelImpl;
+import dao.ItemDao;
+import dao.impl.ItemDaoImpl;
 
 import java.io.IOException;
 import java.sql.*;
@@ -66,7 +66,7 @@ public class ItemFormController {
 
     @FXML
     private JFXTextField txtUnitPrice;
-    ItemModel itemModel=new ItemModelImpl();
+    ItemDao itemDao =new ItemDaoImpl();
 
     public void initialize(){
         colCode.setCellValueFactory(new TreeItemPropertyValueFactory<>("code"));
@@ -187,7 +187,7 @@ public class ItemFormController {
     @FXML
     void updateButtonOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         ItemDto itemDto=new ItemDto(txtCode.getText(),txtDesc.getText(),Double.parseDouble(txtUnitPrice.getText()),Integer.parseInt(txtQty.getText()));
-        boolean isUpdated = itemModel.updateItem(itemDto);
+        boolean isUpdated = itemDao.updateItem(itemDto);
         if (isUpdated){
             new Alert(Alert.AlertType.INFORMATION,"Update Success").show();
         }

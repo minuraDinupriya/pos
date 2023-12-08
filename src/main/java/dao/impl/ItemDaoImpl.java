@@ -2,7 +2,7 @@ package dao.impl;
 
 import db.DBConnection;
 import dto.ItemDto;
-import dao.ItemModel;
+import dao.ItemDao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemModelImpl implements ItemModel {
+public class ItemDaoImpl implements ItemDao {
     @Override
     public boolean saveItem(ItemDto dto) throws SQLException, ClassNotFoundException {
         String updateQuery="INSERT INTO item VALUES('"+dto.getCode()+"','"+dto.getDesc()+"','"+dto.getUnitPrice()+"','"+dto.getQty()+"')";
