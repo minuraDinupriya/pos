@@ -92,7 +92,7 @@ public class ItemFormController {
                 txtQty.setText(item.getValue().getQty()+"");
 
             }
-        });
+        });//
 
         txtSearch.textProperty().addListener(new ChangeListener<String>() {
             @Override
