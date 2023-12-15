@@ -76,6 +76,24 @@ public class ItemFormController {
         colOption.setCellValueFactory(new TreeItemPropertyValueFactory<>("btn"));
         loadItemTable();
 
+//        tblItem.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+//            setData(newValue);
+//        });
+
+
+        tblItem.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1 && (!tblItem.getSelectionModel().isEmpty())) {
+                //Get the item that was clicked
+                TreeItem<ItemTm> item = tblItem.getSelectionModel().getSelectedItem();
+                //Set the text field to the item's value
+                txtCode.setText(item.getValue().getCode());
+                txtDesc.setText(item.getValue().getDesc());
+                txtUnitPrice.setText(item.getValue().getUnitPrice()+"");
+                txtQty.setText(item.getValue().getQty()+"");
+
+            }
+        });
+
         txtSearch.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String newValue) {
@@ -89,6 +107,16 @@ public class ItemFormController {
             }
         });
     }
+
+//    private void setData(TreeItem<ItemTm> newValue) {
+//        if (newValue != null) {
+//            txtCode.setEditable(false);
+//            txtId.setText(newValue.getId());
+//            txtName.setText(newValue.getName());
+//            txtAddress.setText(newValue.getAddress());
+//            txtSalary.setText(String.valueOf(newValue.getSalary()));
+//        }
+//    }
 
     private void loadItemTable() {
         ObservableList<ItemTm> tmList = FXCollections.observableArrayList();
