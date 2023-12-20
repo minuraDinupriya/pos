@@ -10,7 +10,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="519.0" prefWidth="785.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CustomerFormController">
+<AnchorPane prefHeight="519.0" prefWidth="785.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CustomerFormController">
    <children>
       <TextField fx:id="txtId" layoutX="56.0" layoutY="38.0" prefHeight="26.0" prefWidth="90.0" />
       <TextField fx:id="txtName" layoutX="176.0" layoutY="38.0" prefHeight="26.0" prefWidth="188.0" />
@@ -30,7 +30,7 @@
             <TableColumn fx:id="colOption" prefWidth="108.0001220703125" text="Option" />
         </columns>
       </TableView>
-      <Button layoutX="692.0" layoutY="470.0" mnemonicParsing="false" onAction="#reloadButtonOnAction" prefHeight="26.0" prefWidth="60.0" text="Reload" />
+      <Button layoutX="662.0" layoutY="470.0" mnemonicParsing="false" onAction="#reloadButtonOnAction" prefHeight="31.0" prefWidth="90.0" text="Reload" />
       <Button layoutX="604.0" layoutY="84.0" mnemonicParsing="false" onAction="#updateButtonOnAction" prefHeight="26.0" prefWidth="60.0" text="Update" />
       <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="9.0" layoutY="13.0" onAction="#backButtonOnAction" prefHeight="33.0" prefWidth="36.0">
          <graphic>
@@ -41,5 +41,6 @@
             </ImageView>
          </graphic>
       </JFXButton>
+      <Button layoutX="567.0" layoutY="470.0" mnemonicParsing="false" onAction="#reportButtonOnAction" prefHeight="31.0" prefWidth="90.0" text="Report" />
    </children>
 </AnchorPane>
