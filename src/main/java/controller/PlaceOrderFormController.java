@@ -6,7 +6,9 @@ import dto.CustomerDto;
 import dto.ItemDto;
 import dto.OrderDetailsDto;
 import dto.OrderDto;
+import dto.tm.ItemTm;
 import dto.tm.OrderTm;
+import entity.Customer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -67,9 +69,9 @@ public class PlaceOrderFormController {
         colOption.setCellValueFactory(new TreeItemPropertyValueFactory<>("btn"));
 
         generateId();
-
         loadCustomerIds();
         loadItemCodes();
+
 
         cmbCustId.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, id) -> {
             for (CustomerDto dto:customers) {
@@ -89,6 +91,7 @@ public class PlaceOrderFormController {
         });
     }
 
+
     private void loadItemCodes() {
         try {
             items = itemDao.allItems();
@@ -104,9 +107,19 @@ public class PlaceOrderFormController {
         }
     }
 
-    private void loadCustomerIds() {//////////
+    private void loadCustomerIds() {
         try {
-            customers = customerDao.getAll();
+            customers=new ArrayList<>();
+            for (Customer customer:customerDao.getAll()) {
+
+                customers.add(new CustomerDto(
+                        customer.getId(),
+                        customer.getName(),
+                        customer.getAddress(),
+                        customer.getSalary()
+                ));
+            }
+
             ObservableList list = FXCollections.observableArrayList();
             for (CustomerDto dto:customers) {
                 list.add(dto.getId());
