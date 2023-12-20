@@ -1,10 +1,13 @@
 package controller;
 
+import bo.BoFactory;
+import bo.custom.ItemBo;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import dao.util.BoType;
 import db.DBConnection;
 import dto.ItemDto;
 import javafx.beans.value.ChangeListener;
@@ -66,7 +69,7 @@ public class ItemFormController {
 
     @FXML
     private JFXTextField txtUnitPrice;
-    ItemDao itemDao =new ItemDaoImpl();
+    private ItemBo itemBo= BoFactory.getInstance().getBo(BoType.ITEM);
 
     public void initialize(){
         colCode.setCellValueFactory(new TreeItemPropertyValueFactory<>("code"));
@@ -215,7 +218,7 @@ public class ItemFormController {
     @FXML
     void updateButtonOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         ItemDto itemDto=new ItemDto(txtCode.getText(),txtDesc.getText(),Double.parseDouble(txtUnitPrice.getText()),Integer.parseInt(txtQty.getText()));
-        boolean isUpdated = itemDao.updateItem(itemDto);
+        boolean isUpdated = itemBo.updateItem(itemDto);
         if (isUpdated){
             new Alert(Alert.AlertType.INFORMATION,"Update Success").show();
         }
