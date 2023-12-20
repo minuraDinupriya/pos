@@ -104,7 +104,7 @@ public class PlaceOrderFormController {
         }
     }
 
-    private void loadCustomerIds() {//
+    private void loadCustomerIds() {////
         try {
             customers = customerDao.getAll();
             ObservableList list = FXCollections.observableArrayList();
