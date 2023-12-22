@@ -62,7 +62,7 @@ public class PlaceOrderFormController {
 
     private CustomerBo customerBo = BoFactory.getInstance().getBo(BoType.CUSTOMER);
 //    private ItemDao itemDao = new ItemDaoImpl();
-    ItemBo itemBo= new ItemBoImpl();
+    ItemBo itemBo= BoFactory.getInstance().getBo(BoType.ITEM);
     private OrderDao orderDao = new OrderDaoImpl();
 
     private ObservableList<OrderTm> tmList = FXCollections.observableArrayList();
