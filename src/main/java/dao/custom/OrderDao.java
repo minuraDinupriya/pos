@@ -8,7 +8,6 @@ import entity.Orders;
 
 import java.sql.SQLException;
 
-public interface OrderDao {
-    boolean saveOrder(OrderDto dto) throws SQLException, ClassNotFoundException;
+public interface OrderDao extends CrudDao<OrderDto> {
     OrderDto lastOrder() throws SQLException, ClassNotFoundException;
 }

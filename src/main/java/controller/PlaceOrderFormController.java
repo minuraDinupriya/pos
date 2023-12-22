@@ -3,6 +3,7 @@ package controller;
 import bo.BoFactory;
 import bo.custom.CustomerBo;
 import bo.custom.ItemBo;
+import bo.custom.OrderBo;
 import bo.custom.impl.ItemBoImpl;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
@@ -61,10 +62,8 @@ public class PlaceOrderFormController {
     private double tot = 0;
 
     private CustomerBo customerBo = BoFactory.getInstance().getBo(BoType.CUSTOMER);
-//    private ItemDao itemDao = new ItemDaoImpl();
     ItemBo itemBo= BoFactory.getInstance().getBo(BoType.ITEM);
-    private OrderDao orderDao = new OrderDaoImpl();
-
+    private OrderBo orderBo=BoFactory.getInstance().getBo(BoType.ORDER);
     private ObservableList<OrderTm> tmList = FXCollections.observableArrayList();
 
     public void initialize() throws SQLException, ClassNotFoundException {
@@ -174,7 +173,7 @@ public class PlaceOrderFormController {
 
     public void generateId(){
         try {
-            OrderDto dto = orderDao.lastOrder();
+            OrderDto dto = orderBo.lastOrder();
             if (dto!=null){
                 String id = dto.getOrderId();
                 int num = Integer.parseInt(id.split("[D]")[1]);
@@ -203,7 +202,7 @@ public class PlaceOrderFormController {
 //        if (!tmList.isEmpty()){
             boolean isSaved = false;
             try {
-                isSaved = orderDao.saveOrder(new OrderDto(
+                isSaved = orderBo.saveOrder(new OrderDto(
                         lblOrderId.getText(),
                         LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd")),
                         cmbCustId.getValue().toString(),
