@@ -1,6 +1,7 @@
 package controller;
 
 import bo.BoFactory;
+import bo.custom.CustomerBo;
 import bo.custom.ItemBo;
 import bo.custom.impl.ItemBoImpl;
 import com.jfoenix.controls.*;
@@ -59,14 +60,14 @@ public class PlaceOrderFormController {
     private List<ItemDto> items;
     private double tot = 0;
 
-    private CustomerDao customerDao = new CustomerDaoImpl();
+    private CustomerBo customerBo = BoFactory.getInstance().getBo(BoType.CUSTOMER);
 //    private ItemDao itemDao = new ItemDaoImpl();
     ItemBo itemBo= new ItemBoImpl();
     private OrderDao orderDao = new OrderDaoImpl();
 
     private ObservableList<OrderTm> tmList = FXCollections.observableArrayList();
 
-    public void initialize(){
+    public void initialize() throws SQLException, ClassNotFoundException {
         colCode.setCellValueFactory(new TreeItemPropertyValueFactory<>("code"));
         colDesc.setCellValueFactory(new TreeItemPropertyValueFactory<>("desc"));
         colQty.setCellValueFactory(new TreeItemPropertyValueFactory<>("qty"));
@@ -112,29 +113,15 @@ public class PlaceOrderFormController {
         }
     }
 
-    private void loadCustomerIds() {
-        try {
-            customers=new ArrayList<>();
-            for (Customer customer:customerDao.getAll()) {
+    private void loadCustomerIds() throws SQLException, ClassNotFoundException {
+        customers=new ArrayList<>();
+        customers.addAll(customerBo.allCustomers());
 
-                customers.add(new CustomerDto(
-                        customer.getId(),
-                        customer.getName(),
-                        customer.getAddress(),
-                        customer.getSalary()
-                ));
-            }
-
-            ObservableList list = FXCollections.observableArrayList();
-            for (CustomerDto dto:customers) {
-                list.add(dto.getId());
-            }
-            cmbCustId.setItems(list);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        ObservableList list = FXCollections.observableArrayList();
+        for (CustomerDto dto:customers) {
+            list.add(dto.getId());
         }
+        cmbCustId.setItems(list);
     }
 
     public void backButtonOnAction(ActionEvent actionEvent) throws IOException {

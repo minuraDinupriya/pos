@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerBoImpl implements CustomerBo {
-    private CustomerDao customerDao= new CustomerDaoImpl();
+    private CustomerDao customerDao= DaoFactory.getInstance().getDao(DaoType.CUSTOMER);
 
     @Override
     public boolean saveCustomer(CustomerDto dto) throws SQLException, ClassNotFoundException {
