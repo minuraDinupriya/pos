@@ -81,7 +81,7 @@ public class PlaceOrderFormController {
         cmbCustId.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, id) -> {
             for (CustomerDto dto:customers) {
                 if (dto.getId().equals(id)){
-                    txtCustName.setText(dto.getName());
+                    txtCustName.setText(dto.getName());/
                 }
             }
         });
