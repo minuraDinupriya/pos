@@ -1,7 +1,9 @@
 package dao.custom.impl;
 
 import com.mysql.cj.x.protobuf.MysqlxCrud;
+import dao.DaoFactory;
 import dao.util.CrudUtil;
+import dao.util.DaoType;
 import db.DBConnection;
 import dto.OrderDto;
 import dao.custom.OrderDetailsDao;
@@ -16,7 +18,7 @@ import java.util.List;
 
 public class OrderDaoImpl implements OrderDao {
 
-    OrderDetailsDao orderDetailsDao = new OrderDetailsDaoImpl();
+    OrderDetailsDao orderDetailsDao = DaoFactory.getInstance().getDao(DaoType.ORDER_DETAIL);
 
     @Override
     public OrderDto lastOrder() throws SQLException, ClassNotFoundException {
@@ -51,7 +53,7 @@ public class OrderDaoImpl implements OrderDao {
             );
 
             if (isSaved) {
-                boolean isDetailSaved = orderDetailsDao.saveOrderDetails(dto.getList());
+                boolean isDetailSaved = orderDetailsDao.saveDetailsList(dto.getList());
                 if (isDetailSaved) {
                     connection.commit();
                     return true;

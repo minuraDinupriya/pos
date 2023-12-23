@@ -8,6 +8,6 @@ import entity.OrderDetail;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface OrderDetailsDao  {
-    boolean saveOrderDetails(List<OrderDetailsDto> list) throws SQLException, ClassNotFoundException;
+public interface OrderDetailsDao extends CrudDao<OrderDetailsDto>  {
+    boolean saveDetailsList(List<OrderDetailsDto> list) throws SQLException, ClassNotFoundException;
 }
