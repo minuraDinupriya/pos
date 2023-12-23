@@ -73,7 +73,7 @@ public class PlaceOrderFormController {
         colAmount.setCellValueFactory(new TreeItemPropertyValueFactory<>("amount"));
         colOption.setCellValueFactory(new TreeItemPropertyValueFactory<>("btn"));
 
-        generateId();
+        setOrderID();
         loadCustomerIds();
         loadItemCodes();
 
@@ -94,6 +94,10 @@ public class PlaceOrderFormController {
                 }
             }
         });
+    }
+
+    private void setOrderID() throws SQLException, ClassNotFoundException {
+        lblOrderId.setText(orderBo.generateID());
     }
 
 
@@ -171,23 +175,7 @@ public class PlaceOrderFormController {
 
     }
 
-    public void generateId(){
-        try {
-            OrderDto dto = orderBo.lastOrder();
-            if (dto!=null){
-                String id = dto.getOrderId();
-                int num = Integer.parseInt(id.split("[D]")[1]);
-                num++;
-                lblOrderId.setText(String.format("D%03d",num));
-            }else{
-                lblOrderId.setText("D001");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     public void placeOrderButtonOnAction(ActionEvent actionEvent) {
         List<OrderDetailsDto> list = new ArrayList<>();
