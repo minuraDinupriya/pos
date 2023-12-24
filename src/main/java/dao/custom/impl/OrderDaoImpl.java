@@ -4,11 +4,15 @@ import com.mysql.cj.x.protobuf.MysqlxCrud;
 import dao.DaoFactory;
 import dao.util.CrudUtil;
 import dao.util.DaoType;
+import dao.util.HibernateUtil;
 import db.DBConnection;
+import dto.OrderDetailsDto;
 import dto.OrderDto;
 import dao.custom.OrderDetailsDao;
 import dao.custom.OrderDao;
-import entity.Orders;
+import entity.*;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,7 +26,7 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public OrderDto lastOrder() throws SQLException, ClassNotFoundException {
-        String sql = "SELECT * FROM orders ORDER BY id DESC LIMIT 1";
+        String sql = "SELECT * FROM orders ORDER BY orderId DESC LIMIT 1";
         ResultSet resultSet = CrudUtil.execute(sql);
 
         if (resultSet.next()){
@@ -39,33 +43,31 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public boolean save(OrderDto dto) throws SQLException, ClassNotFoundException {
-        Connection connection=null;
-        try {
-            connection = DBConnection.getInstance().getConnection();
-            connection.setAutoCommit(false);
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        Orders order = new Orders(
+                dto.getOrderId(),
+                dto.getDate()
+        );
+        order.setCustomer(session.find(Customer.class,dto.getCustId()));
+        session.save(order);
 
-            String sql = "INSERT INTO orders VALUES(?,?,?)";
-            boolean isSaved= CrudUtil.execute(
-                    sql,
-                    dto.getOrderId(),
-                    dto.getDate(),
-                    dto.getCustId()
+        List<OrderDetailsDto> list = dto.getList(); //dto type
+
+        for (OrderDetailsDto detailDto:list) {
+            OrderDetail orderDetail = new OrderDetail(
+                    new OrderDetailsKey(detailDto.getOrderId(), detailDto.getItemCode()),
+                    session.find(Item.class, detailDto.getItemCode()),
+                    order,
+                    detailDto.getQty(),
+                    detailDto.getUnitPrice()
             );
-
-            if (isSaved) {
-                boolean isDetailSaved = orderDetailsDao.saveDetailsList(dto.getList());
-                if (isDetailSaved) {
-                    connection.commit();
-                    return true;
-                }
-            }
-        }catch (SQLException | ClassNotFoundException ex){
-            connection.rollback();
-            ex.printStackTrace();
-        }finally {
-            connection.setAutoCommit(true);
+            session.save(orderDetail);
         }
-        return false;
+
+        transaction.commit();
+        session.close();
+        return true;
     }
 
     @Override

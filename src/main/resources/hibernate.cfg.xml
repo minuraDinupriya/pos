@@ -5,7 +5,7 @@
 <hibernate-configuration>
   <session-factory>
     <property name="connection.url">
-      jdbc:mysql://localhost:3306/thogakade?createDatabaseIfNOtExist=ture
+      jdbc:mysql://localhost:3306/thogakade?createDatabaseIfNotExist=true
     </property>
     <property name="connection.driver_class">
       com.mysql.cj.jdbc.Driver
@@ -20,6 +20,6 @@
     <property name="show_sql">true</property>
 
     <!-- DB schema will be updated if needed -->
-     <property name="hibernate.hbm2ddl.auto">update</property>
+     <property name="hibernate.hbm2ddl.auto">create</property>
   </session-factory>
 </hibernate-configuration>
