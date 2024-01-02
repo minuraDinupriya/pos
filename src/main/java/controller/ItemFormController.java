@@ -90,7 +90,6 @@ public class ItemFormController {
                 txtDesc.setText(item.getValue().getDesc());
                 txtUnitPrice.setText(item.getValue().getUnitPrice()+"");
                 txtQty.setText(item.getValue().getQty()+"");
-
             }
         });
 

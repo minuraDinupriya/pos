@@ -28,14 +28,7 @@ public class ItemDaoImpl implements ItemDao {
 
     @Override
     public boolean save(Item entity) throws SQLException, ClassNotFoundException {
-//        String updateQuery="INSERT INTO item VALUES(?,?,?,?)";
-//        return CrudUtil.execute(
-//                updateQuery,
-//                entity.getCode(),
-//                entity.getDescription(),
-//                entity.getUnitPrice(),
-//                entity.getQtyOnHand()
-//        );
+
         Session session= HibernateUtil.getSession();
         Transaction transaction = session.beginTransaction();
         session.save(entity);
@@ -47,20 +40,6 @@ public class ItemDaoImpl implements ItemDao {
 
     @Override
     public List<Item> getAll() throws SQLException, ClassNotFoundException {
-//        List<Item> list = new ArrayList<>();//its better to pass dto to bo
-//        String sql = "SELECT * FROM item";
-//        ResultSet resultSet = CrudUtil.execute(sql);
-//
-//        while (resultSet.next()){
-//            list.add(new Item(
-//                    resultSet.getString(1),
-//                    resultSet.getString(2),
-//                    resultSet.getDouble(3),
-//                    resultSet.getInt(4)
-//            ));
-//        }
-//
-//        return list;
 
         Session session=HibernateUtil.getSession();
         Query query = session.createQuery("FROM Item");
@@ -71,37 +50,22 @@ public class ItemDaoImpl implements ItemDao {
 
     @Override
     public boolean update(Item entity) throws SQLException, ClassNotFoundException {
-        String updateQuery="UPDATE item SET description= ?, unitPrice=?, qtyOnHand=? WHERE code=?";
-        System.out.println(entity);
-        return CrudUtil.execute(
-                updateQuery,
-                entity.getDescription(),
-                entity.getUnitPrice(),
-                entity.getQtyOnHand(),
-                entity.getCode()
-        );
 
-
-//        Session session = HibernateUtil.getSession();
-//        Transaction transaction = session.beginTransaction();
-//        Item item = session.find(Item.class,entity.getCode());
-//        System.out.println(item);
-//        item.setDescription(entity.getDescription());
-//        item.setUnitPrice(entity.getUnitPrice());
-//        item.setQtyOnHand(entity.getQtyOnHand());
-//        session.save(item);
-//        transaction.commit();
-//        session.close();
-//        return true;
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        Item item = session.find(Item.class,entity.getCode());
+        System.out.println(item);
+        item.setDescription(entity.getDescription());
+        item.setUnitPrice(entity.getUnitPrice());
+        item.setQtyOnHand(entity.getQtyOnHand());
+        session.save(item);
+        transaction.commit();
+        session.close();
+        return true;
     }
 
     @Override
     public boolean delete(String value) throws SQLException, ClassNotFoundException {
-//        String deleteQuery="DELETE FROM item WHERE code=?";
-//        return CrudUtil.execute(
-//                deleteQuery,
-//                value
-//        );
 
         Session session= HibernateUtil.getSession();
         Transaction transaction = session.beginTransaction();
