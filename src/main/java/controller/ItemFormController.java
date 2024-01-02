@@ -141,13 +141,9 @@ public class ItemFormController {
     }
 
     private void deleteItem(String code) {
-        String sql = "DELETE from item WHERE code=?";
 
         try {
-            PreparedStatement pstm = DBConnection.getInstance().getConnection().prepareStatement(sql);
-            pstm.setString(1,code);
-            int result = pstm.executeUpdate();
-            if (result>0){
+            if (itemBo.deleteItem(code)){
                 new Alert(Alert.AlertType.INFORMATION,"Item Deleted!").show();
                 loadItemTable();
             }else{
