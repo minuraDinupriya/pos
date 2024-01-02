@@ -9,7 +9,9 @@ import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import dao.util.BoType;
 import db.DBConnection;
+import dto.CustomerDto;
 import dto.ItemDto;
+import dto.tm.ItemTm;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -24,12 +26,12 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import dto.tm.ItemTm;
-import dao.custom.ItemDao;
-import dao.custom.impl.ItemDaoImpl;
 
 import java.io.IOException;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class ItemFormController {
@@ -71,18 +73,13 @@ public class ItemFormController {
     private JFXTextField txtUnitPrice;
     private ItemBo itemBo= BoFactory.getInstance().getBo(BoType.ITEM);
 
-    public void initialize(){
+    public void initialize() throws SQLException, ClassNotFoundException {
         colCode.setCellValueFactory(new TreeItemPropertyValueFactory<>("code"));
         colDesc.setCellValueFactory(new TreeItemPropertyValueFactory<>("desc"));
         colUnitPrice.setCellValueFactory(new TreeItemPropertyValueFactory<>("unitPrice"));
         colQty.setCellValueFactory(new TreeItemPropertyValueFactory<>("qty"));
         colOption.setCellValueFactory(new TreeItemPropertyValueFactory<>("btn"));
         loadItemTable();
-
-//        tblItem.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-//            setData(newValue);
-//        });
-
 
         tblItem.setOnMouseClicked(event -> {
             if (event.getClickCount() == 1 && (!tblItem.getSelectionModel().isEmpty())) {
@@ -95,7 +92,7 @@ public class ItemFormController {
                 txtQty.setText(item.getValue().getQty()+"");
 
             }
-        });//
+        });
 
         txtSearch.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -111,32 +108,19 @@ public class ItemFormController {
         });
     }
 
-//    private void setData(TreeItem<ItemTm> newValue) {
-//        if (newValue != null) {
-//            txtCode.setEditable(false);
-//            txtId.setText(newValue.getId());
-//            txtName.setText(newValue.getName());
-//            txtAddress.setText(newValue.getAddress());
-//            txtSalary.setText(String.valueOf(newValue.getSalary()));
-//        }
-//    }
-
-    private void loadItemTable() {
+    private void loadItemTable() throws SQLException, ClassNotFoundException {
         ObservableList<ItemTm> tmList = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM item";
 
         try {
-            Statement stm = DBConnection.getInstance().getConnection().createStatement();
-            ResultSet result = stm.executeQuery(sql);
-
-            while (result.next()){
+            List<ItemDto> dtoList = itemBo.allItems();
+            for (ItemDto dto:dtoList){
                 JFXButton btn = new JFXButton("Delete");
 
                 ItemTm tm = new ItemTm(
-                        result.getString(1),
-                        result.getString(2),
-                        result.getDouble(3),
-                        result.getInt(4),
+                        dto.getCode(),
+                        dto.getDesc(),
+                        dto.getUnitPrice(),
+                        dto.getQty(),
                         btn
                 );
 

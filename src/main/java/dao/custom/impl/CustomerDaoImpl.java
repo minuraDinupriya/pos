@@ -26,7 +26,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
     @Override
     public boolean save(Customer entity) throws SQLException, ClassNotFoundException {
-       Session session= HibernateUtil.getSession();
+         Session session= HibernateUtil.getSession();
         Transaction transaction = session.beginTransaction();
         session.save(entity);
         transaction.commit();
@@ -49,8 +49,8 @@ public class CustomerDaoImpl implements CustomerDao {
         Transaction transaction = session.beginTransaction();//
         Customer customer = session.find(Customer.class, entity.getId());
         customer.setName(entity.getName());
-        customer.setName(entity.getAddress());
-        customer.setName(entity.getSalary()+"");
+        customer.setAddress(entity.getAddress());
+        customer.setSalary(entity.getSalary());
         session.save(customer);
         transaction.commit();
         session.close();

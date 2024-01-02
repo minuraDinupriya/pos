@@ -17,8 +17,8 @@ public class Orders {
     private String date;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @JoinColumn(name = "customer_id")//customer entity eke thiyena primary key ek order table eke hadena
+    private Customer customer;//       customer_id ekt set krnn kiyal kiyanne(foreign key ek widiyata)
 
     @OneToMany(mappedBy = "orders")
     private List<OrderDetail> orderDetails = new ArrayList<>();
