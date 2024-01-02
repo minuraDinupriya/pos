@@ -26,19 +26,28 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public OrderDto lastOrder() throws SQLException, ClassNotFoundException {
-        String sql = "SELECT * FROM orders ORDER BY orderId DESC LIMIT 1";
-        ResultSet resultSet = CrudUtil.execute(sql);
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = session.beginTransaction();
 
-        if (resultSet.next()){
+        List<Orders> resultList = session.createQuery("FROM Orders o ORDER BY o.orderId DESC", Orders.class)
+                .setMaxResults(1)
+                .getResultList();
+
+        transaction.commit();
+        session.close();
+
+        if (!resultList.isEmpty()) {
+            Orders latestOrder = resultList.get(0);
             return new OrderDto(
-                    resultSet.getString(1),
-                    resultSet.getString(2),
-                    resultSet.getString(3),
+                    latestOrder.getOrderId(),
+                    latestOrder.getDate(),
+                    latestOrder.getCustomer().getId(),
                     null
             );
-        }
 
-        return null;
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -56,7 +65,10 @@ public class OrderDaoImpl implements OrderDao {
 
         for (OrderDetailsDto detailDto:list) {
             OrderDetail orderDetail = new OrderDetail(
-                    new OrderDetailsKey(detailDto.getOrderId(), detailDto.getItemCode()),
+                    new OrderDetailsKey(
+                            detailDto.getOrderId(),
+                            detailDto.getItemCode()
+                    ),
                     session.find(Item.class, detailDto.getItemCode()),
                     order,
                     detailDto.getQty(),

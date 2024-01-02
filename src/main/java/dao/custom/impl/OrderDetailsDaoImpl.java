@@ -12,22 +12,23 @@ import java.util.List;
 public class OrderDetailsDaoImpl implements OrderDetailsDao {
     @Override
     public boolean saveDetailsList(List<OrderDetailsDto> list) throws SQLException, ClassNotFoundException {
-        boolean isDetailsSaved = true;
-        for (OrderDetailsDto dto:list) {
-            String sql = "INSERT INTO orderdetail VALUES(?,?,?,?)";
-            boolean isSaved = CrudUtil.execute(
-                    sql,
-                    dto.getOrderId(),
-                    dto.getItemCode(),
-                    dto.getQty(),
-                    dto.getUnitPrice()
-            );
-
-            if(!isSaved){
-                isDetailsSaved = false;
-            }
-        }
-        return isDetailsSaved;
+//        boolean isDetailsSaved = true;
+//        for (OrderDetailsDto dto:list) {
+//            String sql = "INSERT INTO orderdetail VALUES(?,?,?,?)";
+//            boolean isSaved = CrudUtil.execute(
+//                    sql,
+//                    dto.getOrderId(),
+//                    dto.getItemCode(),
+//                    dto.getQty(),
+//                    dto.getUnitPrice()
+//            );
+//
+//            if(!isSaved){
+//                isDetailsSaved = false;
+//            }
+//        }
+//        return isDetailsSaved;
+        return false;
     }
 
 
