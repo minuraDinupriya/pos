@@ -173,16 +173,9 @@ public class ItemFormController {
                 Double.parseDouble(txtUnitPrice.getText()),
                 Integer.parseInt(txtQty.getText())
         );
-        String sql = "INSERT INTO item VALUES(?,?,?,?)";
 
         try {
-            PreparedStatement pstm = DBConnection.getInstance().getConnection().prepareStatement(sql);
-            pstm.setString(1,dto.getCode());
-            pstm.setString(2,dto.getDesc());
-            pstm.setDouble(3,dto.getUnitPrice());
-            pstm.setInt(4,dto.getQty());
-            int result = pstm.executeUpdate();
-            if (result>0){
+            if (itemBo.saveItem(dto)){
                 new Alert(Alert.AlertType.INFORMATION,"Item Saved!").show();
                 loadItemTable();
 //                clearFields();
